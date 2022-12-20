@@ -1,7 +1,12 @@
 package com.example.busstoptextnext.busStop;
 
-public class BusStop {
+import java.io.Serializable;
+
+public class BusStop implements Serializable {
     private String description, number;
+
+    // required empty constructor
+    public BusStop() {}
 
     public BusStop(String description, String number) {
         this.description = description;
