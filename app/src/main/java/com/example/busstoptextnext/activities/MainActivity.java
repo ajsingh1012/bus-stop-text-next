@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private final String TAG = "MainActivity";
     private String userId, userPath;
     private BusStopController busStopController;
-    private String phoneNumber;
+    //private String phoneNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, "Welcome " + (username == null ? "" : username) + "!", Toast.LENGTH_SHORT).show();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         busStopController = new BusStopController(db, userPath);
-        db.document(userPath).get().addOnCompleteListener(task -> {
+        /*db.document(userPath).get().addOnCompleteListener(task -> {
             if(task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         }
         ).addOnFailureListener(e -> {
             Log.e(TAG, e.getMessage());
-        });
+        });*/
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -81,16 +81,6 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
-
-//        navController.addOnDestinationChangedListener(new NavController.OnDestinationChangedListener() {
-//            @Override
-//            public void onDestinationChanged(@NonNull NavController navController, @NonNull NavDestination navDestination, @Nullable Bundle bundle) {
-//                Log.i(TAG, navDestination.getLabel().toString());
-//                if(!navDestination.getLabel().toString().equals("Home")) {
-//                    //
-//                }
-//            }
-//        });
     }
 
     /**
@@ -130,9 +120,5 @@ public class MainActivity extends AppCompatActivity {
 
     public String getUserDataPath() {
         return this.userPath;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
     }
 }

@@ -75,7 +75,7 @@ public class HomeFragment extends Fragment {
                 selectedStopId = busStopController.getStop(i).getNumber();
             } catch (Exception e) {
                 selectedStopId = null;
-                Toast.makeText(view.getContext(), "No stop selected", Toast.LENGTH_SHORT);
+                Toast.makeText(view.getContext(), "No stop selected", Toast.LENGTH_SHORT).show();
             }
         };
 
@@ -88,13 +88,13 @@ public class HomeFragment extends Fragment {
         busStopController.addDataUpdateSnapshotListener(busStopAdapter);
 
         sendMsg.setOnClickListener(l -> {
-            String phoneNumber = ((MainActivity) a).getPhoneNumber();
+            String phoneNumber = busStopController.getPhoneNumber();
             try {
-                ActivityCompat.requestPermissions(mainActivity,new String[] { Manifest.permission.SEND_SMS}, 1);
+                ActivityCompat.requestPermissions(mainActivity, new String[] { Manifest.permission.SEND_SMS}, 1);
                 if(selectedStopId != null) {
                     SmsManager.getDefault().sendTextMessage(phoneNumber, null, selectedStopId, null, null);
                 } else {
-                    Toast.makeText(view.getContext(), "No stop selected", Toast.LENGTH_SHORT);
+                    Toast.makeText(view.getContext(), "No stop selected", Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
                 AlertDialog.Builder alertDialogBuilder = new

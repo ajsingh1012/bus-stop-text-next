@@ -97,6 +97,7 @@ public class SignUpActivity extends AppCompatActivity {
                                                 intent.putExtra("user-path-firebase", "userData/" + user.getUid());
                                                 // Clear fields
                                                 name.setText("");
+                                                phone.setText("");
                                                 email.setText("");
                                                 password.setText("");
                                                 startActivity(intent);

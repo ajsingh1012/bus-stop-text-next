@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -57,14 +58,20 @@ public class DashboardFragment extends Fragment {
         numberEditText = view.findViewById(R.id.editTextNumberDecimal);
         addButton = view.findViewById(R.id.addButton);
         addButton.setOnClickListener(l -> {
-            busStopController.addEdit(
-                    new BusStop(
-                            descriptionEditText.getText().toString(),
-                            numberEditText.getText().toString()
-                    )
-            );
-            descriptionEditText.setText("");
-            numberEditText.setText("");
+            String desc = descriptionEditText.getText().toString();
+            String number = numberEditText.getText().toString();
+            if(!desc.isBlank() && !number.isBlank()) {
+                busStopController.addEdit(
+                        new BusStop(
+                                descriptionEditText.getText().toString(),
+                                numberEditText.getText().toString()
+                        )
+                );
+                descriptionEditText.setText("");
+                numberEditText.setText("");
+            } else {
+                Toast.makeText(view.getContext(), "Strings cannot be empty!", Toast.LENGTH_SHORT).show();
+            }
         });
 
         LinearLayoutManager manager = new LinearLayoutManager(getContext());

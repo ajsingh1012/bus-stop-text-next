@@ -2,8 +2,14 @@ package com.example.busstoptextnext.busStop;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -15,16 +21,19 @@ public class BusStopController {
     private final String TAG = "BusStopController";
     private final String fireStorePath = "BusStops";
 
+    private FirebaseFirestore db;
     private CollectionReference busStopCollection;
     private ArrayList<BusStop> busStops;
     private ArrayList<Boolean> selection;
-    private String userPath;
+    private String userPath, phoneNumber;
 
     public BusStopController(FirebaseFirestore db, String userPath) {
+        this.db = db;
         this.busStopCollection = db.collection(userPath + "/" + fireStorePath);
         this.busStops = new ArrayList<>();
         this.selection = new ArrayList<>();
         this.userPath = userPath;
+        getNumberFromDB();
     }
 
     public void addDataUpdateSnapshotListener(BusStopAdapter busStopAdapter){
@@ -44,6 +53,38 @@ public class BusStopController {
 
             busStopAdapter.notifyDataSetChanged(); // Notifying the adapter to render any new data fetched from the cloud
         });
+    }
+
+    public void getNumberFromDB() {
+        db.document(userPath).get().addOnCompleteListener(task -> {
+                    if(task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                            phoneNumber = (String) document.getData().get("localNo");
+                        } else {
+                            Log.d(TAG, "No such document");
+                        }
+                    } else {
+                        Log.d(TAG, "get failed with ", task.getException());
+                    }
+                }
+        ).addOnFailureListener(e -> {
+            Log.e(TAG, e.getMessage());
+        });
+    }
+
+    public void setNumber(String number) {
+        if(number.isBlank() || number.length() < 5) {
+            throw new IllegalArgumentException("Phone number must be at least 5 digits!");
+        }
+
+        this.phoneNumber = number;
+        db.document(userPath).update("localNo", number);
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
     public void addEdit(BusStop busStop){
